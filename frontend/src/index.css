@@ -1,0 +1,534 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import "tailwindcss";
+
+/* ─── DESIGN TOKENS ──────────────────────────────────────────────────── */
+:root {
+  /* Surface */
+  --bg:        #f4f2ee;   /* warm off-white */
+  --surface:   #ffffff;
+  --surface-2: #edeae4;   /* dimmed */
+  --border:    #dedad3;
+  --border-strong: #c2bdb5;
+
+  /* Text */
+  --text-1:    #17171a;
+  --text-2:    #4f4d4a;
+  --text-3:    #9a9791;
+
+  /* Accent — use very sparingly */
+  --accent:    #2b50e8;
+  --accent-dim: #eaedfc;
+
+  /* Semantic */
+  --success:   #196636;
+  --success-bg: #eaf3ee;
+  --success-bd: #b6d9c4;
+  --warn:      #8f520c;
+  --warn-bg:   #fef5e4;
+  --warn-bd:   #f5d89b;
+  --danger:    #b01c1c;
+  --danger-bg: #fdf0f0;
+  --danger-bd: #f5b8b8;
+
+  /* Canvas (dark) */
+  --canvas-bg:      #0d0f12;
+  --canvas-surface: #161820;
+  --canvas-border:  #24262f;
+  --canvas-text:    #e6e4de;
+  --canvas-muted:   #636677;
+
+  /* Spacing scale — 4px base */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+
+  /* Radius */
+  --radius-sm: 3px;
+  --radius:    5px;
+  --radius-lg: 8px;
+
+  /* Shadows — very subtle */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
+  --shadow:    0 2px 8px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+
+  /* Legacy aliases */
+  --ink:       var(--text-1);
+  --ink-soft:  #191b22;
+  --paper:     var(--bg);
+  --paper-dim: var(--surface-2);
+  --line:      var(--border);
+  --muted:     var(--text-3);
+  --cobalt:    var(--accent);
+  --loupe-red: var(--danger);
+  --forest:    var(--success);
+  --amber:     var(--warn);
+}
+
+/* ─── BASE ───────────────────────────────────────────────────────────── */
+html, body, #root { height: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ─── TYPOGRAPHY SCALE ───────────────────────────────────────────────── */
+.font-display {
+  font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+}
+
+/* Page title — 20px, Space Grotesk bold */
+.t-page {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+  color: var(--text-1);
+  line-height: 1.3;
+}
+
+/* Section title — 10px caps */
+.t-section {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* Card title — 14px Space Grotesk */
+.t-card {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-1);
+  letter-spacing: -0.1px;
+}
+
+/* Body — 14px */
+.t-body { font-size: 14px; color: var(--text-2); line-height: 1.65; }
+
+/* Meta — 12px */
+.t-meta { font-size: 12px; color: var(--text-3); line-height: 1.5; }
+
+/* Label — 10px caps */
+.t-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* ─── BUTTON SYSTEM ──────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, opacity 0.12s, color 0.12s;
+  white-space: nowrap;
+  text-decoration: none;
+  line-height: 1;
+  user-select: none;
+}
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Primary (near-black) */
+.btn-primary {
+  background: var(--text-1);
+  color: var(--bg);
+  border-color: var(--text-1);
+}
+.btn-primary:hover:not(:disabled) {
+  background: #2c2c30;
+  border-color: #2c2c30;
+}
+
+/* Accent (blue) — true CTA only */
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.btn-accent:hover:not(:disabled) { opacity: 0.87; }
+
+/* Secondary */
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text-1);
+  border-color: var(--border);
+}
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+}
+
+/* Ghost */
+.btn-ghost {
+  background: transparent;
+  color: var(--text-2);
+  border-color: transparent;
+}
+.btn-ghost:hover:not(:disabled) {
+  color: var(--text-1);
+  background: var(--surface-2);
+}
+
+/* Danger */
+.btn-danger {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border-color: var(--danger-bd);
+}
+.btn-danger:hover:not(:disabled) { background: #fde4e4; }
+
+/* Size variants — share exact height */
+.btn-sm  { height: 30px; padding: 0 12px; font-size: 12px; }
+.btn-lg  { height: 44px; padding: 0 24px; font-size: 14px; font-weight: 600; }
+
+/* ─── CARD SYSTEM ────────────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-body    { padding: var(--sp-5); }
+.card-section {
+  padding: var(--sp-4) var(--sp-5);
+  border-top: 1px solid var(--border);
+}
+.card-header {
+  padding: var(--sp-4) var(--sp-5);
+  border-bottom: 1px solid var(--border);
+}
+
+/* ─── FORM ELEMENTS ──────────────────────────────────────────────────── */
+.input {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  color: var(--text-1);
+  font-family: inherit;
+  transition: border-color 0.12s, box-shadow 0.12s;
+  appearance: none;
+}
+.input::placeholder { color: var(--text-3); }
+.input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(43, 80, 232, 0.08);
+}
+
+.textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  color: var(--text-1);
+  font-family: inherit;
+  resize: vertical;
+  line-height: 1.6;
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+.textarea::placeholder { color: var(--text-3); }
+.textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(43, 80, 232, 0.08);
+}
+
+.select {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  padding-right: 32px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  color: var(--text-1);
+  font-family: inherit;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239a9791' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: border-color 0.12s;
+}
+.select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(43, 80, 232, 0.08);
+}
+
+label.form-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 6px;
+}
+
+/* ─── BADGE / PILL SYSTEM ────────────────────────────────────────────── */
+/* Standardized — all badges share same height, radius, font */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 7px;
+  height: 18px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+}
+
+.badge-neutral  { background: var(--surface-2);  color: var(--text-3);   border-color: var(--border); }
+.badge-running  { background: var(--accent-dim);  color: var(--accent);   border-color: #c5d0f8; }
+.badge-done     { background: var(--success-bg);  color: var(--success);  border-color: var(--success-bd); }
+.badge-failed   { background: var(--danger-bg);   color: var(--danger);   border-color: var(--danger-bd); }
+.badge-warn     { background: var(--warn-bg);     color: var(--warn);     border-color: var(--warn-bd); }
+.badge-accent   { background: var(--accent);      color: #fff;            border-color: var(--accent); }
+
+/* ─── DIVIDER ────────────────────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: var(--border);
+  border: none;
+  margin: 0;
+}
+
+/* ─── STAGE / PROGRESS NAV ───────────────────────────────────────────── */
+.stage-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.stage-nav .stage-active { color: var(--text-1); }
+.stage-nav .stage-sep    { opacity: 0.3; }
+
+/* ─── PAGE HEADER ────────────────────────────────────────────────────── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 52px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+/* ─── AI PILL ────────────────────────────────────────────────────────── */
+/* One consistent treatment — used in header & fixed corner */
+.ai-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-3);
+  cursor: default;
+  user-select: none;
+  font-family: 'Inter', sans-serif;
+}
+.ai-pill .ai-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-3);
+  flex-shrink: 0;
+}
+.ai-pill.ai-active {
+  border-color: var(--success-bd);
+  color: var(--success);
+  background: var(--success-bg);
+}
+.ai-pill.ai-active .ai-dot { background: var(--success); }
+.ai-pill.ai-offline {
+  border-color: var(--warn-bd);
+  color: var(--warn);
+  background: var(--warn-bg);
+}
+.ai-pill.ai-offline .ai-dot { background: var(--warn); }
+
+/* ─── LOADING SHIMMER ────────────────────────────────────────────────── */
+@keyframes shimmer-slide {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--surface-2) 0%,
+    var(--border)    50%,
+    var(--surface-2) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-slide 1.6s ease-in-out infinite;
+  border-radius: var(--radius);
+}
+
+/* ─── SUBTLE PULSE ───────────────────────────────────────────────────── */
+@keyframes subtle-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+
+/* ─── REACT FLOW — dark canvas ───────────────────────────────────────── */
+.react-flow                   { background: var(--canvas-bg); }
+.react-flow__background       { background: var(--canvas-bg); }
+.react-flow__controls {
+  background: var(--canvas-surface);
+  border: 1px solid var(--canvas-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: none;
+}
+.react-flow__controls button {
+  background: var(--canvas-surface);
+  border-bottom: 1px solid var(--canvas-border);
+  color: var(--canvas-muted);
+}
+.react-flow__controls button:hover { color: var(--canvas-text); }
+.react-flow__edge-path {
+  stroke: #2e3040;
+  stroke-width: 1.5;
+}
+.react-flow__edge.running .react-flow__edge-path {
+  stroke: var(--accent);
+  stroke-dasharray: 6 4;
+  animation: dashflow 0.6s linear infinite;
+}
+.react-flow__edge.done .react-flow__edge-path    { stroke: var(--success); stroke-width: 1.5; }
+.react-flow__edge.skipped .react-flow__edge-path { stroke: #282a36; stroke-dasharray: 2 5; }
+@keyframes dashflow { to { stroke-dashoffset: -20; } }
+
+/* ─── SCROLLBAR ──────────────────────────────────────────────────────── */
+::-webkit-scrollbar            { height: 5px; width: 5px; }
+::-webkit-scrollbar-track      { background: transparent; }
+::-webkit-scrollbar-thumb      { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover{ background: var(--border-strong); }
+
+/* ─── UTILITIES ──────────────────────────────────────────────────────── */
+.truncate-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.truncate-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Centered content column */
+.content-col {
+  max-width: 660px;
+  margin: 0 auto;
+  padding: 0 var(--sp-6);
+}
+
+/* Section separator */
+.section-title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+/* ─── RESULT GRID ────────────────────────────────────────────────────── */
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+@media (max-width: 1100px) {
+  .result-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 680px) {
+  .result-grid { grid-template-columns: 1fr; }
+}
+
+/* ─── DIRECTION CARD GRID ────────────────────────────────────────────── */
+.direction-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+@media (max-width: 1000px) {
+  .direction-grid { grid-template-columns: 1fr; }
+}
+
+/* ─── RESPONSIVE PAGE WIDTH ──────────────────────────────────────────── */
+@media (max-width: 680px) {
+  .page-header { padding: 0 16px; }
+  .content-col { padding: 0 16px; }
+}
