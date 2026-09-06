@@ -17,34 +17,82 @@ export class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="max-w-2xl mx-auto my-12 p-8 rounded-xl bg-[#181a20] border border-[var(--loupe-red)] text-center shadow-2xl">
-          <div className="w-12 h-12 rounded-full bg-red-950/60 border border-[var(--loupe-red)] flex items-center justify-center mx-auto mb-4 text-[var(--loupe-red)] font-bold text-lg">
-            !
-          </div>
-          <h2 className="font-display text-xl font-bold text-[var(--paper)] mb-2">
-            Creative Director couldn't load
-          </h2>
-          <p className="text-xs text-[var(--loupe-red)] bg-red-950/30 p-3 rounded font-mono mb-6 text-left break-words">
-            {this.state.error?.message || String(this.state.error)}
-          </p>
-          <div className="flex items-center justify-center gap-4">
-            <button
-              onClick={() => {
-                this.setState({ hasError: false, error: null });
-                if (this.props.onRetry) this.props.onRetry();
-              }}
-              className="text-xs px-4 py-2.5 rounded bg-[var(--cobalt)] text-white font-display font-bold uppercase tracking-wider hover:opacity-90 transition-all"
-            >
-              Retry AI Creative Director
-            </button>
-            {this.props.onBack && (
+        <div style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'var(--bg)',
+        }}>
+          <div style={{
+            maxWidth: 440,
+            width: '100%',
+            margin: '0 24px',
+            padding: '32px',
+            background: 'var(--surface)',
+            border: '1px solid var(--danger-bd)',
+            borderRadius: 'var(--radius-lg)',
+            boxShadow: 'var(--shadow)',
+            textAlign: 'center',
+          }}>
+            <div style={{
+              width: 40,
+              height: 40,
+              borderRadius: '50%',
+              background: 'var(--danger-bg)',
+              border: '1px solid var(--danger-bd)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 16px',
+              fontSize: 18,
+              fontWeight: 700,
+              color: 'var(--danger)',
+            }}>
+              !
+            </div>
+            <h2 style={{
+              fontFamily: 'Space Grotesk, sans-serif',
+              fontSize: 17,
+              fontWeight: 600,
+              color: 'var(--text-1)',
+              marginBottom: 8,
+            }}>
+              Creative Director couldn't load
+            </h2>
+            <p style={{
+              fontSize: 11,
+              fontFamily: 'monospace',
+              color: 'var(--danger)',
+              background: 'var(--danger-bg)',
+              padding: '10px 12px',
+              borderRadius: 'var(--radius)',
+              marginBottom: 24,
+              wordBreak: 'break-all',
+              textAlign: 'left',
+              lineHeight: 1.5,
+            }}>
+              {this.state.error?.message || String(this.state.error)}
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
               <button
-                onClick={this.props.onBack}
-                className="text-xs px-4 py-2.5 rounded bg-[#2a2c33] text-[var(--paper)] font-display font-bold uppercase tracking-wider hover:opacity-90 transition-all"
+                onClick={() => {
+                  this.setState({ hasError: false, error: null });
+                  if (this.props.onRetry) this.props.onRetry();
+                }}
+                className="btn btn-primary btn-sm"
               >
-                Back to brief
+                Retry
               </button>
-            )}
+              {this.props.onBack && (
+                <button
+                  onClick={this.props.onBack}
+                  className="btn btn-secondary btn-sm"
+                >
+                  Back to brief
+                </button>
+              )}
+            </div>
           </div>
         </div>
       );

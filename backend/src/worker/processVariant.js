@@ -56,11 +56,6 @@ export async function processVariant({ variantId, itemId, jobId }) {
       });
       currentUrl = creativeResult.url;
       currentLocalPath = creativeResult.localPath;
-      console.log(`[processVariant Debug] Variant ${variant.variant_index + 1} creativeResult:`, {
-        url: creativeResult.url,
-        score: creativeResult.score,
-        hasDirection: !!creativeResult.creativeDirection,
-      });
       setVariantProgress(variantId, { generate: 'done' });
     } else {
       setVariantProgress(variantId, { generate: 'skipped' });

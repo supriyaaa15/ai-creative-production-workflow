@@ -160,9 +160,7 @@ Return ONLY valid raw JSON with this exact structure:
   ]
 }`;
 
-  console.log('\n==================== PROMPT SUMMARY ====================');
-  console.log(`Goal: ${goalStr} | Audience: ${audStr} | Style: ${styleStr} | Platform: ${platformStr}`);
-  console.log('========================================================\n');
+
 
   try {
     const controller = new AbortController();

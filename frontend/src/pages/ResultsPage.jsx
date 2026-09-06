@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { api } from '../lib/api.js';
 import AssetRow from '../components/results/AssetRow.jsx';
 import CampaignExportBar from '../components/results/CampaignExportBar.jsx';
@@ -7,27 +7,45 @@ export default function ResultsPage({ jobId, onBack }) {
   const [data, setData]           = useState(null);
   const [pollError, setPollError] = useState(null);
   const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState(null);
   const [downloadUrl, setDownloadUrl] = useState(null);
+  const pollRef = useRef(null);
 
-  useEffect(() => {
-    let stopped  = false;
-    let interval;
+  const startPoll = (id) => {
+    if (pollRef.current) {
+      pollRef.current.stopped = true;
+      clearInterval(pollRef.current.interval);
+    }
+    const ctx = { stopped: false, interval: null };
+    pollRef.current = ctx;
+
     const doPoll = async () => {
       try {
-        const res = await api.getJob(jobId);
+        const res = await api.getJob(id);
+        if (ctx.stopped) return;
         setData(res);
         setPollError(null);
         if (res.job.status === 'completed' || res.job.status === 'failed') {
-          stopped = true;
-          clearInterval(interval);
+          ctx.stopped = true;
+          clearInterval(ctx.interval);
         }
       } catch (err) {
-        setPollError(String(err.message || err));
+        if (!ctx.stopped) setPollError(String(err.message || err));
       }
     };
     doPoll();
-    interval = setInterval(() => { if (!stopped) doPoll(); }, 2000);
-    return () => { stopped = true; clearInterval(interval); };
+    ctx.interval = setInterval(() => { if (!ctx.stopped) doPoll(); }, 2000);
+  };
+
+  useEffect(() => {
+    startPoll(jobId);
+    return () => {
+      if (pollRef.current) {
+        pollRef.current.stopped = true;
+        clearInterval(pollRef.current.interval);
+      }
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jobId]);
 
   /* Loading state */
@@ -41,7 +59,7 @@ export default function ResultsPage({ jobId, onBack }) {
             </p>
             <p style={{ fontSize: 12, color: 'var(--text-3)', marginBottom: 20 }}>{pollError}</p>
             <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
-              <button onClick={() => { setPollError(null); }} className="btn btn-primary btn-sm">Retry</button>
+              <button onClick={() => { setPollError(null); startPoll(jobId); }} className="btn btn-primary btn-sm">Retry</button>
               <button onClick={onBack} className="btn btn-secondary btn-sm">Back</button>
             </div>
           </div>
@@ -69,16 +87,44 @@ export default function ResultsPage({ jobId, onBack }) {
   const keptCount   = allVariants.filter((v) => v.keep && v.status === 'completed').length;
 
   const handleRetry = async (itemId, variantId) => {
-    await api.retryVariant(jobId, itemId, variantId);
+    try {
+      await api.retryVariant(jobId, itemId, variantId);
+      // Restart polling so the UI refreshes when the variant processes
+      startPoll(jobId);
+    } catch (err) {
+      console.error('Retry failed:', err.message);
+    }
   };
   const handlePatch = async (itemId, variantId, patch) => {
-    await api.patchVariant(jobId, itemId, variantId, patch);
+    // Optimistically update local state for instant visual feedback
+    setData((prev) => ({
+      ...prev,
+      items: prev.items.map((item) =>
+        item.id === itemId
+          ? {
+              ...item,
+              variants: item.variants.map((v) =>
+                v.id === variantId ? { ...v, ...patch } : v
+              ),
+            }
+          : item
+      ),
+    }));
+    try {
+      await api.patchVariant(jobId, itemId, variantId, patch);
+    } catch (err) {
+      // On failure re-poll to restore consistent state
+      startPoll(jobId);
+    }
   };
   const handleExport = async () => {
     setExporting(true);
+    setExportError(null);
     try {
       const res = await api.exportCampaign(jobId);
       setDownloadUrl(res.download_url);
+    } catch (err) {
+      setExportError(err.message || 'Export failed');
     } finally {
       setExporting(false);
     }
@@ -93,6 +139,7 @@ export default function ResultsPage({ jobId, onBack }) {
         totalCount={allVariants.length}
         onExport={handleExport}
         exporting={exporting}
+        exportError={exportError}
         downloadUrl={downloadUrl}
         onBack={onBack}
       />
@@ -141,8 +188,31 @@ export default function ResultsPage({ jobId, onBack }) {
             borderRadius: 'var(--radius)',
             fontSize: 12,
             color: 'var(--warn)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 12,
           }}>
-            Poll error: {pollError}
+            <span>Poll error — retrying: {pollError}</span>
+            <button onClick={() => setPollError(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: 'var(--warn)', opacity: 0.6 }}>✕</button>
+          </div>
+        )}
+        {exportError && (
+          <div style={{
+            marginTop: 12,
+            padding: '8px 12px',
+            background: 'var(--danger-bg)',
+            border: '1px solid var(--danger-bd)',
+            borderRadius: 'var(--radius)',
+            fontSize: 12,
+            color: 'var(--danger)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 12,
+          }}>
+            <span>Export failed: {exportError}</span>
+            <button onClick={() => setExportError(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: 'var(--danger)', opacity: 0.6 }}>✕</button>
           </div>
         )}
       </div>

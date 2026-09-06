@@ -16,12 +16,18 @@ function getStatusBadge(status) {
 export default function DashboardPage({ onNew, onOpen }) {
   const [jobs, setJobs]       = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError]     = useState(null);
 
-  useEffect(() => {
+  const loadJobs = () => {
+    setLoading(true);
+    setError(null);
     api.listJobs()
       .then((res) => setJobs(res.jobs))
+      .catch((err) => setError(err.message || 'Failed to load campaigns'))
       .finally(() => setLoading(false));
-  }, []);
+  };
+
+  useEffect(() => { loadJobs(); }, []);
 
   return (
     <div style={{ minHeight: '100vh' }}>
@@ -83,8 +89,25 @@ export default function DashboardPage({ onNew, onOpen }) {
           </div>
         )}
 
+        {/* Error state */}
+        {!loading && error && (
+          <div style={{
+            border: '1px solid var(--danger-bd)',
+            borderRadius: 'var(--radius-lg)',
+            padding: '24px',
+            background: 'var(--danger-bg)',
+            textAlign: 'center',
+          }}>
+            <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--danger)', marginBottom: 6 }}>
+              Could not reach backend
+            </p>
+            <p style={{ fontSize: 12, color: 'var(--text-3)', marginBottom: 16 }}>{error}</p>
+            <button onClick={loadJobs} className="btn btn-secondary btn-sm">Retry</button>
+          </div>
+        )}
+
         {/* Empty state */}
-        {!loading && jobs.length === 0 && (
+        {!loading && !error && jobs.length === 0 && (
           <div style={{
             border: '1px dashed var(--border)',
             borderRadius: 'var(--radius-lg)',

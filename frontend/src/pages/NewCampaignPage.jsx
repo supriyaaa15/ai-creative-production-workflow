@@ -19,13 +19,16 @@ function computeNodeStatus(items) {
   const nodeTypes = ['generate', 'upscale', 'caption'];
   const status = {};
   for (const type of nodeTypes) {
+    const total = all.length;
     const doneCount = all.filter(
       (v) => v.node_progress[type] === 'done' || v.node_progress[type] === 'skipped',
     ).length;
-    const anyRunning = all.some((v) => v.status === 'running');
-    if (doneCount === all.length) {
+    const anyInProgressForType = all.some(
+      (v) => v.status === 'running' && !v.node_progress[type],
+    );
+    if (doneCount === total) {
       status[type] = 'done';
-    } else if (doneCount > 0 || anyRunning) {
+    } else if (doneCount > 0 || anyInProgressForType) {
       status[type] = 'running';
     } else {
       status[type] = 'idle';

@@ -29,14 +29,7 @@ jobsRouter.get('/', (req, res) => {
 jobsRouter.post('/propose-directions', async (req, res) => {
   try {
     const { brief } = req.body;
-    console.log('\n=================== BRIEF RECEIVED ===================');
-    console.log(JSON.stringify(brief, null, 2));
     const proposals = await proposeCreativeDirections(brief || {});
-    console.log('\n===================== AI SOURCE =====================');
-    console.log(proposals.source);
-    console.log('\n================ DIRECTIONS GENERATED ================');
-    console.log(JSON.stringify(proposals.directions?.map(d => ({ name: d.name, headline: d.headline, concept: d.concept, strategy: d.strategy })), null, 2));
-    console.log('======================================================\n');
     res.json(proposals);
   } catch (err) {
     console.error('[Creative Director API Error]:', err);
